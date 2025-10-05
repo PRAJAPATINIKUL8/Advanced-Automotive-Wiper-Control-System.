@@ -1,75 +1,54 @@
-Automated Wiper Control System
-A simulation of an automated vehicle wiper control system designed in MATLAB & Simulink. This system adjusts the wiper speed based on the intensity of rainfall, detected by a simulated rain sensor.
+Automatic Wiper System
 
-📝 Description
-This project models a smart wiper system that eliminates the need for manual adjustment by the driver. The control logic, implemented using a Stateflow chart, processes the input from a rain sensor and actuates the wiper motor at different speeds (OFF, LOW, HIGH). The entire system is built and simulated within the Simulink environment.
+Overview:
+-----------
+This project implements an automatic wiper system for vehicles using a rain sensor and a microcontroller (e.g., Arduino). The system detects rain intensity and automatically controls the speed of the wiper motor.
 
-The primary goal is to demonstrate a closed-loop control system for an common automotive application.
+Components:
+-----------
+- Microcontroller (Arduino Uno or similar)
+- Rain sensor module
+- Relay module (to control wiper motor)
+- Wiper motor
+- Power supply
 
-✨ Features
-Automatic Mode: Wipers activate and adjust speed automatically based on simulated rain intensity.
+Basic Arduino Code Example:
+---------------------------
+const int rainSensorPin = A0;    // Analog pin for rain sensor
+const int relayPin = 8;          // Digital pin for relay
 
-Manual Override: A switch allows the user to manually select OFF, LOW, or HIGH speed modes.
+void setup() {
+    pinMode(relayPin, OUTPUT);
+    Serial.begin(9600);
+}
 
-State Control: Utilizes a Stateflow chart to manage the system's operational states efficiently.
+void loop() {
+    int sensorValue = analogRead(rainSensorPin);
+    Serial.print("Rain Sensor Value: ");
+    Serial.println(sensorValue);
 
-Real-time Visualization: Scopes and displays show the current rain level, control mode, and resulting wiper speed.
+    if (sensorValue < 300) { // Heavy rain
+        digitalWrite(relayPin, HIGH); // Wiper ON (fast)
+        delay(500);
+        digitalWrite(relayPin, LOW);
+        delay(500);
+    } else if (sensorValue < 600) { // Light rain
+        digitalWrite(relayPin, HIGH); // Wiper ON (slow)
+        delay(1000);
+        digitalWrite(relayPin, LOW);
+        delay(1000);
+    } else {
+        digitalWrite(relayPin, LOW); // Wiper OFF
+    }
+}
 
-🛠️ Software Requirements
-To run this simulation, you will need:
+How it works:
+-------------
+- The rain sensor outputs an analog value based on rain intensity.
+- The microcontroller reads this value and determines the rain level.
+- Depending on the rain intensity, the wiper motor is activated at different speeds using a relay.
 
-MATLAB 2025a (or a compatible version)
-
-Simulink Toolbox
-
-Stateflow Toolbox
-
-🚀 How to Run the Simulation
-Clone or Download: Get a local copy of this project repository.
-
-Open the Project: Launch MATLAB and navigate to the project's root directory.
-
-Open the Simulink Model: Double-click the main Simulink file (e.g., WiperControlSystem.slx).
-
-Run the Simulation:
-
-Click the Run (▶) button in the Simulink Editor toolbar.
-
-The simulation will start. You can interact with it in real-time.
-
-Interact with the Model:
-
-Use the Slider or Signal Builder block to change the 'Rain Intensity' value.
-
-Toggle the 'Mode' switch to change between Automatic and Manual control.
-
-Observe the output on the Scopes and Dashboard blocks to see how the wiper speed responds.
-
-⚙️ Model Overview
-The Simulink model is composed of three main subsystems:
-
-Sensor (Input)
-
-Simulates the rain sensor. A Slider allows you to manually vary the rain intensity from 0 (no rain) to 10 (heavy rain).
-
-Controller (Logic)
-
-The core of the system, this Stateflow chart contains the logic for both automatic and manual modes. It takes the rain intensity and mode selection as inputs and outputs the desired wiper speed state.
-
-Automatic Logic:
-
-Rain < 2: Wipers OFF
-
-2 ≤ Rain < 6: Wipers LOW Speed
-
-Rain ≥ 6: Wipers HIGH Speed
-
-Actuator (Output)
-
-Represents the physical wiper motor. It receives the command from the controller and generates a corresponding waveform, which is visualized in a Scope.
-
-🤝 Contributing & Contact
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page or submit a pull request.
-
-For any questions or suggestions, please contact:
-Nikul Prajapati - prajapatinikul8@gmail.com
+Note:
+-----
+- Adjust sensor thresholds as needed for your sensor.
+- Ensure proper isolation and safety when interfacing with vehicle electronics.
